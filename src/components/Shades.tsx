@@ -19,6 +19,7 @@ const Shades: FC<{}> = () => {
         )
         return (
           <div
+            key={step + '--' + hex + '--' + index}
             className="flex-auto shade flex justify-between xyz-in"
             xyz="fade duration-5 small"
             style={{

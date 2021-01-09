@@ -1,3 +1,8 @@
+export const NAMED_COLORS_RGB = {
+  black: { r: 0, g: 0, b: 0 },
+  white: { r: 1, g: 1, b: 1 }
+}
+
 export const BASE_COLOR_IS_VALID_DEFAULT: boolean = true
 export const BASE_COLOR_DEFAULT: string = '808080'
 
