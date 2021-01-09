@@ -1,0 +1,8 @@
+# files 
+.DS_Store
+*-lock.json
+
+# folders
+node_modules/
+dist/
+coverage/

@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "jsx": "react",
+    "module": "esnext",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"]
+  },
+  "include": ["./**/*.tsx", "./**/*.ts", "./**/*.d.ts"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
+}
