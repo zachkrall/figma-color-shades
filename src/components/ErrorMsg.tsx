@@ -1,23 +1,35 @@
 import React, { FC } from 'react'
+import { useSettings } from '../context'
 
-const ErrorMsg: FC<{ colorCode: string }> = ({ colorCode }) => {
+const ErrorMsg: FC<{}> = () => {
+  const [state] = useSettings()
+
   return (
     <div
-      className="flex flex-auto items-center justify-center text-center xyz-in"
-      xyz="fade down duration-6"
+      className="flex flex-column flex-auto items-center justify-center text-center xyz-in"
+      xyz="fade small duration-6"
     >
       <div
+        className="mb"
         style={{
           dispay: 'inline-block',
-          border: '1px solid var(--light-gray)',
+          border: '1px solid tomato',
           padding: '20px 15px',
           borderRadius: '5px',
-          boxShadow: '0px 0px 20px rgba(0,0,0,0.1)'
+          background: 'rgba(255,0,0,0.1)'
         }}
       >
-        <h2 className="mb">
+        <h2 className="flex items-center justify-center">
           <span
-            className="mb"
+            style={{
+              color: 'tomato',
+              fontSize: '1.3em'
+            }}
+          >
+            Invalid Color
+          </span>
+          <span
+            className="ml"
             style={{
               display: 'inline-block',
               background: 'tomato',
@@ -27,24 +39,15 @@ const ErrorMsg: FC<{ colorCode: string }> = ({ colorCode }) => {
               fontWeight: 600
             }}
           >
-            {colorCode}
-          </span>
-          <span
-            style={{
-              color: 'tomato',
-              display: 'block',
-              fontSize: '1.3em'
-            }}
-          >
-            Invalid Color
+            {state.color.hex}
           </span>
         </h2>
-        <p style={{ fontSize: '1.3em', color: 'var(--gray)' }}>
-          Please use a six character hex color.
-          <br />
-          (Example: 0000FF)
-        </p>
       </div>
+      <p style={{ fontSize: '1.3em', color: 'var(--gray)' }}>
+        Please use a six character hex color.
+        <br />
+        (Example: 0000FF)
+      </p>
     </div>
   )
 }

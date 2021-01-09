@@ -1,25 +1,23 @@
 import React, { FC, ChangeEvent, useRef } from 'react'
+import { VARIANCE_MAX, VARIANCE_MIN } from '../constants'
+import { useSettings } from '../context'
 import cleanValues from '../utils/cleanValues'
 
-const VARIANCE_MAX = 20
-const VARIANCE_MIN = 3
+const ColorPicker: FC<{}> = () => {
+  const [state, dispatch] = useSettings()
 
-type Color = { hex: string; isValid: boolean }
-
-interface Props {
-  color: Color
-  variance: number
-  change: (e: { color: Color; variance: number }) => any
-}
-
-const ColorPicker: FC<Props> = ({ color, change, variance }) => {
   const colorInput = useRef<HTMLInputElement>(null)
   const varianceInput = useRef<HTMLInputElement>(null)
   const varianceTextInput = useRef<HTMLInputElement>(null)
 
-  const getColor = (): Color => {
-    let value = colorInput.current.value
-    value = cleanValues(value)
+  const getColor = (elm: HTMLInputElement) => {
+    let value
+
+    if (elm.id === 'color-picker' || elm.id === 'color-input') {
+      value = cleanValues(elm.value)
+    } else {
+      value = colorInput.current.value
+    }
 
     return {
       hex: value,
@@ -41,7 +39,13 @@ const ColorPicker: FC<Props> = ({ color, change, variance }) => {
 
   const inputChange = (e: ChangeEvent<HTMLInputElement>) => {
     console.log(e)
-    change({ color: getColor(), variance: getVariance(e.target.id) })
+    dispatch({
+      type: 'update',
+      payload: {
+        color: getColor(e.target),
+        variance: getVariance(e.target.id)
+      }
+    })
   }
 
   return (
@@ -60,31 +64,19 @@ const ColorPicker: FC<Props> = ({ color, change, variance }) => {
         >
           Color
         </div>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center'
-          }}
-        >
-          <div
-            style={{
-              flexGrow: 0,
-              width: '3em',
-              height: '100%',
-              padding: '8px',
-              backgroundColor:
-                '#' + (!color.isValid ? '808080' : color.hex),
-              borderRadius: '5px',
-              marginRight: 'var(--spacing)',
-              border: '1px solid rgba(0,0,0,0.0)'
-            }}
-          >
-            {'\u00A0'}
-          </div>
+        <div className="flex items-center">
           <input
-            type="text"
+            id="color-picker"
+            type="color"
+            className="mr"
+            onChange={inputChange}
+            value={String('#' + state.color.hex)}
+          />
+          <input
+            id="color-input"
             ref={colorInput}
-            value={color.hex}
+            type="text"
+            value={state.color.hex}
             onInput={inputChange}
             maxLength={
               7 /* user might paste 7 character hex code with # */
@@ -116,18 +108,20 @@ const ColorPicker: FC<Props> = ({ color, change, variance }) => {
             type="range"
             min={VARIANCE_MIN}
             max={VARIANCE_MAX}
-            value={variance}
+            value={state.variance}
             onInput={inputChange}
             ref={varianceInput}
             step={1}
             className="flex-auto mr"
+            disabled={!state.color.isValid}
           />
           <input
             id="varianceText"
             type="text"
-            value={variance}
+            value={state.variance}
             ref={varianceTextInput}
             onInput={inputChange}
+            disabled={!state.color.isValid}
             size={2}
             style={{
               background: 'none',

@@ -1,22 +1,21 @@
 import React, { FC, useCallback } from 'react'
+import { useSettings } from '../context'
 
-const ActionBar: FC<{
-  error: boolean
-  baseColor: string
-  variance: number
-}> = ({ error = false, baseColor, variance }) => {
+const ActionBar: FC<{}> = () => {
+  const [state] = useSettings()
+
   const onCreate = useCallback(() => {
     parent.postMessage(
       {
         pluginMessage: {
           type: 'create-rectangles',
-          baseColor,
-          variance
+          baseColor: state.color.hex,
+          variance: state.variance
         }
       },
       '*'
     )
-  }, [baseColor, variance])
+  }, [state])
 
   const onCancel = useCallback(() => {
     parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
@@ -29,7 +28,7 @@ const ActionBar: FC<{
         <button
           className="btn btn--primary mr"
           onClick={onCreate}
-          disabled={error}
+          disabled={!state.color.isValid}
         >
           Create
         </button>
